@@ -1,0 +1,220 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+            <div class="col-lg-12">
+                <!-- Base Horizontal Form With Icons -->
+                <div class="form-element py-30 mb-30">
+                    <h4 class="font-20 mb-30">Profil</h4>
+                        
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">NIP</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/mail3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.nip }}" name="nip" id="id_nip" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Nama Lengkap</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.nama }}" name="nama" id="id_nama" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Jenis Kelamin</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.jk }}" name="jk" id="id_jk" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Agama</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.agama }}" name="agama" id="id_agama" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Tanggal Lahir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.tgl_lahir }}" name="tgl_lahir" id="id_tgl_lahir" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Tempat Lahir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.tmpt_lahir }}" name="tmpt_lahir" id="id_tmpt_lahir" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Pendidikan Terakhir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.pendidikan }}" name="pendidikan" id="id_pendidikan" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Alamat</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.alamat }}" name="alamat" id="id_alamat" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">No. HP</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.nohp }}" name="nohp" id="id_nohp" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Divisi</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ request.user.karyawan.divisi_id }}" name="divisi" id="id_divisi_id" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-10">
+                                {% if karyawan.foto.url != null %}
+                                    <img src="{{ karyawan.foto.url }}" alt="foto" height="200px" width="200px"><br>
+                                {% else %}
+                                    <img src="{% static 'img/avatar/avatar-user.png' %}" alt="foto" height="200px" width="200px"><br>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row">
+                            <div class="col-12 text-right">
+                                <button type="submit" class="btn long">Update</button>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+                    </form>
+                    <!-- End Form -->
+                </div>
+                <!-- End Horizontal Form With Icons -->
+            </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

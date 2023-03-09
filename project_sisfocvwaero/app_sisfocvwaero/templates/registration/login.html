@@ -1,0 +1,51 @@
+{% extends 'based_accounts.html' %}
+{% block content %}
+{% load static %}
+
+{% if request.user.is_authenticated %}
+
+    <h2 class="mb-4 font-20 text-primary text-center">Anda sedang login</h2>
+    <h4 class="mb-5 font-20 text-center">Silahkan logout</h4>
+    <div class="text-center">
+            <a href="{% url 'logoutt' %}" class="btn">Logout</a>
+    </div>
+
+{% else %}
+    <h2 class="mb-4 font-20 text-primary text-center">LOGIN</h2>
+    <h4 class="mb-5 font-20 text-center">SISFO CV. Waero Water Indonesia</h4>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {% for msg in messages %}
+    <div class="alert alert-primary m-3" role="alert">
+        {{ msg }}
+    </div>
+    {% endfor %}
+
+    <!-- Form Group -->
+    <div class="form-group mb-4">
+        <label for="username" class="mb-2 black bold">Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div>
+    <!-- End Form Group -->
+
+    <!-- Form Group -->
+    <div class="form-group mb-4">
+        <label for="password" class="mb-2 black bold">Password</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+    </div>
+    <!-- End Form Group -->
+
+    <div class="form-group mb-4"><span class="ml-auto"><a href="{% url 'reset_password' %}" class="forgot-pass">Forgot Password</a></span></div>
+
+    <div class="d-flex align-items-center">
+        <button type="submit" class="btn long mr-20">Login</button>
+    </div>
+</form>
+{% endif %}
+
+{% endblock %}
+                    

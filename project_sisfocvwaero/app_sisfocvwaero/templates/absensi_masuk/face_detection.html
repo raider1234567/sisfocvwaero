@@ -1,0 +1,26 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-30">
+                    <button id="face_detection">Detect Faces</button>
+                    <script>document.getElementById('face_detection').addEventListener('click', function() {window.location.href = '{% url "face_detection" %}';});</script>
+
+                    <form action="{% url 'face_detection' %}" method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="text" class="form-control pl-1" value="HADIR" name="status" id="id_status" readonly="readonly">
+                        <div class="d-flex align-items-center">
+                            <button type="submit" class="btn long mr-20">Konfirmasi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

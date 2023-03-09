@@ -1,0 +1,75 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+            <div class="col-lg-12">
+                <!-- Base Horizontal Form With Icons -->
+                <div class="form-element py-30 mb-30">
+                    <h4 class="font-20 mb-30">Edit Data Divisi</h4>
+    
+                    <!-- Form -->
+                    <form action="{% url 'data_divisi_edit' divisi.id %}" method="POST">
+                        {% csrf_token %}
+                        {% for msg in messages %}
+                        <div class="alert alert-primary m-3" role="alert">
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Divisi</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/mail3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ divisi.divisi }}" name="divisi" id="id_divisi" readonly="readonly">
+                                    {{ form.divisi.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Gaji Pokok</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ divisi.gapok }}" name="gapok" id="id_gapok">
+                                    {{ form.gapok.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row">
+                            <div class="col-12 text-right">
+                                <button type="submit" class="btn long">Update</button>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+                    </form>
+                    <!-- End Form -->
+                </div>
+                <!-- End Horizontal Form With Icons -->
+            </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-30">
+                    <form action="{% url 'capture' %}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="image" accept="image/*" id="id_image" value="{{ foto }}">
+                    <div class="form-row">
+                        <div class="col-12 text-right">
+                            <button type="submit" class="btn long">foto</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

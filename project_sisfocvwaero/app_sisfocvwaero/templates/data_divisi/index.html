@@ -1,0 +1,57 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+        <div class="col-12">
+            <div class="card mb-30">
+                {% for msg in messages %}
+                <div class="alert alert-primary m-3" role="alert">
+                    {{ msg }}
+                </div>
+                {% endfor %}
+                <div class="card-body text-center">
+                    <h4 class="font-20">Data Divisi</h4>
+                </div>
+                <div class="card-body table-responsive">
+                    <!-- Invoice List Table -->
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>DIVISI</th>
+                                <th>GAJI POKOK</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>NO</th>
+                                <th>DIVISI</th>
+                                <th>GAJI POKOK</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for forms in form %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ forms.divisi }}</td>
+                                <td>{{ forms.gapok }}</td>
+                                <td>
+                                    <a href="{% url 'data_divisi_edit' forms.id %}" class="btn btn-warning">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Invoice List Table -->
+                </div>
+            </div>
+        </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

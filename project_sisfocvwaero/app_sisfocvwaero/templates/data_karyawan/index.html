@@ -1,0 +1,78 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+        <div class="col-12">
+            <div class="card mb-30">
+                {% for msg in messages %}
+                <div class="alert alert-primary m-3" role="alert">
+                    {{ msg }}
+                </div>
+                {% endfor %}
+                <div class="card-body text-center">
+                    <h4 class="font-20">Data Karyawan</h4>
+                </div>
+                <div class="card-body table-responsive">
+                    <a href="{% url 'data_karyawan_register' %}" class="btn text-right ml-10">Tambah Data</a>
+                    <!-- Invoice List Table -->
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>NIP</th>
+                                <th>USERNAME</th>
+                                <th>NAMA</th>
+                                <th>JENIS KELAMIN</th>
+                                <th>PENDIDIKAN TERAKHIR</th>
+                                <th>ALAMAT</th>
+                                <th>NO HP</th>
+                                <th>DIVISI</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>NO</th>
+                                <th>NIP</th>
+                                <th>USERNAME</th>
+                                <th>NAMA</th>
+                                <th>JENIS KELAMIN</th>
+                                <th>PENDIDIKAN TERAKHIR</th>
+                                <th>ALAMAT</th>
+                                <th>NO HP</th>
+                                <th>DIVISI</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for forms in form %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ forms.nip }}</td>
+                                <td>{{ forms.user }}</td>
+                                <td>{{ forms.nama }}</td>
+                                <td>{{ forms.jk }}</td>
+                                <td>{{ forms.pendidikan }}</td>
+                                <td>{{ forms.alamat }}</td>
+                                <td>{{ forms.nohp }}</td>
+                                <td>{{ forms.divisi_id }}</td>
+                                <td>
+                                    <a href="{% url 'data_karyawan_edit' forms.id %}" class="btn btn-warning">Edit</a>
+                                    <a href="{% url 'data_karyawan_delete' forms.user_id %}" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                                    <!-- <a href="{% url 'data_karyawan_delete' forms.id %}" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Invoice List Table -->
+                </div>
+            </div>
+        </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

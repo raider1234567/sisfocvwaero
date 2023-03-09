@@ -1,0 +1,276 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+            <div class="col-lg-12">
+                <!-- Base Horizontal Form With Icons -->
+                <div class="form-element py-30 mb-30">
+                    <h4 class="font-20 mb-30">Profil</h4>
+    
+                    <!-- Form -->
+                    <form action="{% url 'data_karyawan_edit' karyawan.id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for msg in messages %}
+                        <div class="alert alert-primary m-3" role="alert">
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Username</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/user3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <select name="user" class="form-control pl-1" id="user_id" readonly="readonly">
+                                        <option value="">---------</option>
+                                        {% for user in ar_user %}
+                                            {% if user.id == karyawan.user_id %}
+                                                <option value="{{ user.id }}" selected> {{ user.username }} </option>
+                                            {% else %}
+                                                <option value="{{ user.id }}"> {{ user.username }} </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                      </select>
+                                      {{ form.user.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">NIP</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/mail3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ karyawan.nip }}" name="nip" id="id_nip">
+                                    {{ form.nip.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Nama Lengkap</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <img src="{% static 'img/svg/key3.svg' %}" alt="" class="svg">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control pl-1" value="{{ karyawan.nama }}" name="nama" id="id_nama">
+                                    {{ form.nama.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+    
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Jenis Kelamin</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div id="id_jk">
+                                        <div>
+                                        <label for="id_jk_0"><input type="radio" name="jk" value="PEREMPUAN" id="id_jk_0" {% if karyawan.jk ==  "PEREMPUAN" %}checked{% endif %}>
+                                        PEREMPUAN </label>
+                                        </div>
+                                        <div>
+                                        <label for="id_jk_1"><input type="radio" name="jk" value="LAKI-LAKI" id="id_jk_1" {% if karyawan.jk == "LAKI-LAKI" %}checked{% endif %}>
+                                        LAKI-LAKI </label>
+                                        </div>
+                                        {{ form.jk.errors }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Agama</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <select name="agama" class="form-control pl-1" id="id_agama">
+                                        <option value="">---------</option>
+                                      
+                                        <option value="ISLAM" {% if karyawan.agama ==  "ISLAM" %}selected{% endif %}>ISLAM</option>
+                                      
+                                        <option value="PROTESTAN" {% if karyawan.agama ==  "PROTESTAN" %}selected{% endif %}>PROTESTAN</option>
+                                      
+                                        <option value="KATOLIK" {% if karyawan.agama ==  "KATOLIK" %}selected{% endif %}>KATOLIK</option>
+                                      
+                                        <option value="HINDU" {% if karyawan.agama ==  "HINDU" %}selected{% endif %}>HINDU</option>
+                                      
+                                        <option value="BUDHA" {% if karyawan.agama ==  "BUDHA" %}selected{% endif %}>BUDHA</option>
+                                      
+                                      </select>
+                                      {{ form.agama.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Tanggal Lahir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="date" class="form-control pl-1" value="{{ karyawan.tgl_lahir|date:'Y-m-d' }}" name="tgl_lahir" id="id_tgl_lahir">
+                                    {{ form.tgl_lahir.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Tempat Lahir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control pl-1" value="{{ karyawan.tmpt_lahir }}" name="tmpt_lahir" id="id_tmpt_lahir">
+                                    {{ form.tmpt_lahir.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Pendidikan Terakhir</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <select name="pendidikan" class="form-control pl-1" id="id_pendidikan">
+                                        <option value="">---------</option>
+                                      
+                                        <option value="STRATA 2" {% if karyawan.pendidikan ==  "STRATA 2" %}selected{% endif %}>STRATA 2</option>
+                                      
+                                        <option value="STRATA 1" {% if karyawan.pendidikan ==  "STRATA 1" %}selected{% endif %}>STRATA 1</option>
+                                      
+                                        <option value="SMA/SMK/SEDERAJAT" {% if karyawan.pendidikan ==  "SMA/SMK/SEDERAJAT" %}selected{% endif %}>SMA/SMK/SEDERAJAT</option>
+                                      
+                                        <option value="SMP/MTS/SEDERAJAT" {% if karyawan.pendidikan ==  "SMP/MTS/SEDERAJAT" %}selected{% endif %}>SMP/MTS/SEDERAJAT</option>
+                                      
+                                      </select>
+                                      {{ form.pendidikan.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Alamat</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control pl-1" value="{{ karyawan.alamat }}" name="alamat" id="id_alamat">
+                                    {{ form.alamat.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">No. HP</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control pl-1" value="{{ karyawan.nohp }}" name="nohp" id="id_nohp">
+                                    {{ form.nohp.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Divisi</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <select name="divisi_id" class="form-control pl-1" id="id_divisi_id">
+                                        <option value="">---------</option>
+                                        {% for div in ar_divisi %}
+                                            {% if div.id == karyawan.divisi_id_id %}
+                                                <option value="{{ div.id }}" selected> {{ div.divisi }} </option>
+                                            {% else %}
+                                                <option value="{{ div.id }}"> {{ div.divisi }} </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                      </select>
+                                      {{ form.divisi_id.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-20">
+                            <div class="col-sm-2">
+                                <label class="font-14 bold">Foto</label>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+
+                                    {% if karyawan.foto.url != null %}
+                                        <img src="{{ karyawan.foto.url }}" alt="foto" height="200px" width="200px"><br>
+                                    {% endif %}
+
+                                    <input type="file" name="foto" accept="image/*" id="id_foto">
+                                    {{ form.foto.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row">
+                            <div class="col-12 text-right">
+                                <button type="submit" class="btn long">Update</button>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+                    </form>
+                    <!-- End Form -->
+                </div>
+                <!-- End Horizontal Form With Icons -->
+            </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

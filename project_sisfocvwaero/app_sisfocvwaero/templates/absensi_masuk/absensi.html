@@ -1,0 +1,39 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-30">
+                    <div class="text-center">
+                        <h2 class="m-4 font-20 text-primary text-center">Deteksi Wajah</h2>
+                        <img src="{% static 'img/face-icon.png' %}" alt="" width="400" height="400" class="mb-5"><br>
+                        <button id="" class="btn long mr-20">Deteksi</button>
+                    </div>
+                    
+                    {{ map|safe }}
+                    {{ distance }}
+                    {{ tempat }}
+                    
+                    <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" class="form-control pl-1" value="HADIR" name="status" id="id_status" readonly="readonly">
+                        {{ form.status.errors }}
+                        <div class="d-flex align-items-center">
+                            <button type="submit" class="btn long mr-20">Konfirmasi</button>
+                        </div>
+                    </form>
+
+                   <p>
+                    This product includes GeoLite2 data created by MaxMind, available from
+                    <a href="https://www.maxmind.com">https://www.maxmind.com</a>.
+                   </p> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
