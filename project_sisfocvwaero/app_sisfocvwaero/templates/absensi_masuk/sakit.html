@@ -1,0 +1,59 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+            <div class="col-lg-12">
+                <!-- Base Horizontal Form With Icons -->
+                <div class="form-element py-30 mb-30">
+                    <h4 class="font-20 mb-30">Form Sakit</h4>
+                        
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% for msg in messages %}
+                            <div class="alert alert-primary m-3" role="alert">
+                                {{ msg }}
+                            </div>
+                        {% endfor %}
+
+                         <!-- Form Group -->
+                         <div class="form-group mb-4">
+                            <label class="mb-2 bold d-block">Keterangan</label>
+                            {{ form.keterangan }}
+                            {{ form.keterangan.errors }}
+                        </div>
+                        <!-- End Form Group -->
+
+                        <!-- Form Row -->
+                        <div class="form-row mb-4">
+                            <div class="col-sm-2">
+                                <label class="mb-2 bold d-block">Upload Bukti Surat Sakit</label> <br>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    {{ form.foto }}
+                                    {{ form.foto.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+
+                        <!-- Form Row -->
+                        <div class="form-row">
+                            <div class="col-12 text-right">
+                                <button type="submit" class="btn long">Update</button>
+                            </div>
+                        </div>
+                        <!-- End Form Row -->
+                    </form>
+                    <!-- End Form -->
+                </div>
+                <!-- End Horizontal Form With Icons -->
+            </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

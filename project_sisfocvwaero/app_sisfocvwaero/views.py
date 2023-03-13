@@ -3,6 +3,7 @@ import io
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib import messages
+from django.urls import reverse
 from app_sisfocvwaero.forms import *
 from app_sisfocvwaero.models import *
 from app_sisfocvwaero.utils import get_geo, get_ip_user
@@ -10,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geoip2 import GeoIP2
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from datetime import datetime
+from datetime import datetime, timedelta
 from PIL import Image
 import folium
 import cv2
@@ -172,86 +173,22 @@ def data_profil(request, id):
     return render(request, "data_profil/index.html", {'karyawan': karyawan, 'form': form, 'ar_divisi': ar_divisi, 'ar_user': ar_user})
 
 @login_required
+def absensi(request, id):
+    absensi = Absensi.objects.filter(user_id=id).order_by('-id')
+    return render(request, "absensi/index.html", {'absensi': absensi})
+
+@login_required
 def absensi_masuk(request):
     return render(request, "absensi_masuk/index.html")
 
 @login_required
-def absensi(request):
-    # obj = get_object_or_404(Absensi, id=3)
+def absensi_keluar(request, id):
+    absensi = Absensi.objects.filter(user_id=id).latest('id')
+    return render(request, "absensi_keluar/index.html",{'absensi': absensi})
 
-    form = AbsensiForm(request.POST)
-    geolocator = Nominatim(user_agent="app_sisfocvwaero")
-
-    #get user location
-    user_ip = get_ip_user(request)#ip user tapi masih localhost
-    print(user_ip)
-    user_ip_ = "140.213.74.94" #ip user sementara #ip makassar 140.213.74.94
-    lat, lon = get_geo(user_ip_)
-
-    user_lat = lat
-    user_lon = lon
-    location_user = (user_lat, user_lon)
-
-    location_user_ = geolocator.reverse(location_user)
-    print("address user = ", location_user_.address)
-
-    #get office location
-
-    #lat dan lon lazuna = -5.136449682997404, 119.4825501453872
-    #lat dan lon cv.waero = -5.222915548660268, 119.48697360058289
-
-    kantor_lat = "-5.136449682997404"
-    kantor_lon = "119.4825501453872"
-    location_kantor = (kantor_lat, kantor_lon)
-
-    location_kantor_ = geolocator.reverse(location_kantor)
-    print(location_kantor_.address)
-    # print(location_kantor.latitude, location_kantor.longitude)
-
-    # get distance / hitung jarak
-    distance = round(geodesic(location_user, location_kantor). km, 2)
-    print("jaraknya adalah ",distance)
-
-    #inisialisasi folium
-    m = folium.Map(width=800, height=500, location=location_user) # untuk tambah map
-    m = m._repr_html_()
-
-    #get time now
-    current_time = datetime.now().strftime('%H:%M:%S')
-    print("jam sekarang = ", current_time)
-
-    # pengkondisian jarak
-    if distance < 6 :
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user_id = request.user.id
-
-            #pengkondisian waktu
-            if current_time < '20:00:00':
-                instance.ket_masuk = "TEPAT_WAKTU"
-            else:
-                instance.ket_masuk = "TELAT"
-
-            instance.ket_keluar = "-"
-            status_ = form.cleaned_data.get('status')
-            instance.status = status_
-            instance.save()
-            print("success save")
-        print(form.errors)
-    else:
-        messages.warning(request, "Anda berada diluar jangkauan kantor")
-        return redirect('absensi_masuk')
-
-    context = {
-        # 'distance': obj,
-        'form': form,
-        'map': m,
-    }
-
-
-    return render(request, "absensi_masuk/absensi.html", context)
-
-def face_detection(request):
+@login_required
+def deteksi_wajah_keluar(request, id):
+   #lokasi
 
     geolocator = Nominatim(user_agent="app_sisfocvwaero")
 
@@ -293,9 +230,11 @@ def face_detection(request):
     current_time = datetime.now().strftime('%H:%M:%S')
     print("jam sekarang = ", current_time)
 
-    
+    #get user id logged
+    id_user = request.user.id
+
+    #face detection
     cap = cv2.VideoCapture(0)
-    i=0
 
     while True:
         ret, frame = cap.read()
@@ -310,6 +249,166 @@ def face_detection(request):
 
         cv2.imshow('frame', frame)
         # img = cv2.imwrite('Frame'+str(i)+'.jpg', frame)
+
+        # Check if the video capture device was successfully opened
+        if not cap.isOpened():
+            print("Failed to open video capture device")
+            return
+
+        # Check if the frame was successfully read
+        if not ret:
+            print("Failed to read frame from video capture device")
+            return
+
+        # Convert the frame to a JPEG image buffer
+        success, jpeg_image = cv2.imencode('.jpg', frame)
+        if not success:
+            print("Failed to encode image as JPEG")
+            return
+        
+        absensi = Absensi.objects.get(id=id)
+
+        key = cv2.waitKey(1)
+        if key == ord('s'):
+            # cv2.imwrite(filename='saved_img.jpg', img=frame)
+            form = AbsensiForm(request.POST, request.FILES, instance=absensi)
+            # pengkondisian jarak
+            if distance < 6 :
+                if form.is_valid():
+                    instance = form.save(commit=False)
+                    instance.absen_keluar = current_time
+                    #pengkondisian waktu
+                    if current_time < '17:00:00':
+                        instance.ket_keluar = "TEPAT_WAKTU"
+                    else:
+                        instance.ket_keluar = "LEMBUR"
+                        jam_pulang = '17:00:00'
+                        t1 = datetime.strptime(current_time, '%H:%M:%S')
+                        t2 = datetime.strptime(jam_pulang, '%H:%M:%S')
+                        t3 = abs(t1 - t2)
+                        jam = t3.total_seconds() / 3600
+                        total_jam = round(jam, 2)
+                        instance.jml_jamlembur = total_jam
+                        print("jam lembur ", total_jam)
+
+                    status_ = form.cleaned_data.get('status')
+                    instance.status = status_
+                    img_data = BytesIO(jpeg_image.tobytes())
+                    img_file = File(img_data)
+                    img_file.name = 'image.jpg'
+                    instance.image_keluar = img_file
+                    instance.save()
+                    print("success save")
+                print(form.errors)  
+            else:
+                    messages.warning(request, "Anda berada diluar jangkauan kantor")
+                    return redirect('absensi_masuk')
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    return redirect(reverse("absensi", args=[id_user]), {'absensi': absensi})
+
+@login_required
+def sakit(request,):
+    if request.method == 'POST':
+        form = SakitForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, "Data berhasil ditambahkan")
+                return redirect('absensi')
+            except:
+                pass
+    else:
+        form = SakitForm()
+    return render(request, "absensi_masuk/sakit.html", {'form': form})
+
+@login_required
+def hadir(request):
+    return render(request, "absensi_masuk/hadir.html")
+
+
+@login_required
+def deteksi_wajah(request):
+    #lokasi
+
+    geolocator = Nominatim(user_agent="app_sisfocvwaero")
+
+    #get user location
+    user_ip = get_ip_user(request)#ip user tapi masih localhost
+    print(user_ip)
+    user_ip_ = "140.213.74.94" #ip user sementara #ip makassar 140.213.74.94
+    lat, lon = get_geo(user_ip_)
+
+    user_lat = lat
+    user_lon = lon
+    location_user = (user_lat, user_lon)
+
+    location_user_ = geolocator.reverse(location_user)
+    print("address user = ", location_user_.address)
+
+    #get office location
+
+    #lat dan lon lazuna = -5.136449682997404, 119.4825501453872
+    #lat dan lon cv.waero = -5.222915548660268, 119.48697360058289
+
+    kantor_lat = "-5.136449682997404"
+    kantor_lon = "119.4825501453872"
+    location_kantor = (kantor_lat, kantor_lon)
+
+    location_kantor_ = geolocator.reverse(location_kantor)
+    print(location_kantor_.address)
+    # print(location_kantor.latitude, location_kantor.longitude)
+
+    # get distance / hitung jarak
+    distance = round(geodesic(location_user, location_kantor). km, 2)
+    print("jaraknya adalah ",distance)
+
+    #inisialisasi folium
+    # m = folium.Map(width=800, height=500, location=location_user) # untuk tambah map
+    # m = m._repr_html_()
+
+    #get time now
+    current_time = datetime.now().strftime('%H:%M:%S')
+    print("jam sekarang = ", current_time)
+
+    #get user id logged
+    id_user = request.user.id
+
+    #face detection
+    cap = cv2.VideoCapture(0)
+
+    while True:
+        ret, frame = cap.read()
+
+        face_cascade = cv2.CascadeClassifier('E:/skripsi/program/new_sisfocvwaero/project_sisfocvwaero/app_sisfocvwaero/face.xml')
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.putText(frame, str("OK"), (x+40, y-10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 255, 0))
+
+        cv2.imshow('frame', frame)
+        # img = cv2.imwrite('Frame'+str(i)+'.jpg', frame)
+
+        # Check if the video capture device was successfully opened
+        if not cap.isOpened():
+            print("Failed to open video capture device")
+            return
+
+        # Check if the frame was successfully read
+        if not ret:
+            print("Failed to read frame from video capture device")
+            return
+
+        # Convert the frame to a JPEG image buffer
+        success, jpeg_image = cv2.imencode('.jpg', frame)
+        if not success:
+            print("Failed to encode image as JPEG")
+            return
         
         key = cv2.waitKey(1)
         if key == ord('s'):
@@ -319,10 +418,11 @@ def face_detection(request):
             if distance < 6 :
                 if form.is_valid():
                     instance = form.save(commit=False)
-                    instance.user_id = request.user.id
+                    instance.user_id = id_user
+                    instance.absen_masuk = current_time
 
                     #pengkondisian waktu
-                    if current_time < '20:00:00':
+                    if current_time < '08:00:00':
                         instance.ket_masuk = "TEPAT_WAKTU"
                     else:
                         instance.ket_masuk = "TELAT"
@@ -330,154 +430,21 @@ def face_detection(request):
                     instance.ket_keluar = "-"
                     status_ = form.cleaned_data.get('status')
                     instance.status = status_
-                    width = 640
-                    height = 480
-                    size = (width, height)
-                    img = Image.frombytes('RGB', size, frame)
-                    instance.image_masuk = img
-                    try:
-                        instance.save()
-                    except Exception as e:
-                        print(e)
-                    
-
+                    img_data = BytesIO(jpeg_image.tobytes())
+                    img_file = File(img_data)
+                    img_file.name = 'image.jpg'
+                    instance.image_masuk = img_file
+                    instance.save()
                     print("success save")
                 print(form.errors)  
             else:
                     messages.warning(request, "Anda berada diluar jangkauan kantor")
                     return redirect('absensi_masuk')
             break
-    
-    # form = AbsensiForm(request.POST or None, request.FILES or None)
-    # # pengkondisian jarak
-    # if distance < 6 :
-    #     if form.is_valid():
-    #         print("isi img = ", img)
-    #         instance = form.save(commit=False)
-    #         instance.user_id = request.user.id
 
-    #         #pengkondisian waktu
-    #         if current_time < '20:00:00':
-    #             instance.ket_masuk = "TEPAT_WAKTU"
-    #         else:
-    #             instance.ket_masuk = "TELAT"
-
-    #         instance.ket_keluar = "-"
-    #         status_ = form.cleaned_data.get('status')
-    #         instance.status = status_
-    #         instance.image_masuk = img
-    #         instance.image_keluar = img
-    #         instance.save()
-    #         print("success save")
-    #     print(form.errors)  
-    # else:
-    #         messages.warning(request, "Anda berada diluar jangkauan kantor")
-    #         return redirect('absensi_masuk')
-    
     cap.release()
     cv2.destroyAllWindows()
-    return render(request, "absensi_masuk/index.html")
 
-def face_detection_index(request):
-    image_path = 'media/uploads/berr_0bTP8v5.jpeg.jpg'
-    image_data = default_storage.open(image_path, 'rb').read()
-
-    # Create a Pillow image object from the data
-    try:
-        image = Image.open(io.BytesIO(image_data))
-        image.show()
-    except IOError:
-        print('Unable to display image')
-    return render(request, "absensi_masuk/capture.html")
-
-def capture(request):
-    # Open video capture device
-    cap = cv2.VideoCapture(0)
-    gambar = Gambar()
-
-    # Check if the video capture device was successfully opened
-    if not cap.isOpened():
-        print("Failed to open video capture device")
-        return
-
-    # Read a frame from the video capture device
-    ret, frame = cap.read()
-
-    # Check if the frame was successfully read
-    if not ret:
-        print("Failed to read frame from video capture device")
-        return
-
-    # Convert the frame to a JPEG image buffer
-    success, jpeg_image = cv2.imencode('.jpg', frame)
-    if not success:
-        print("Failed to encode image as JPEG")
-        return
-
-    # Save the JPEG image buffer to the database
-    image_data = io.BytesIO(jpeg_image)
-    gambar.image.save('image.jpg', File(image_data))
-    gambar.save()
-    print("Success save")
-
-    # Release the video capture device and close the window
-    cap.release()
-    cv2.destroyAllWindows()
-    return render(request, 'absensi_masuk/capture.html')
+    return redirect(reverse("absensi", args=[id_user]))
 
 
-# def face_detection(request):
-#     if request.method == 'POST':
-#         # get uploaded image
-#         uploaded_image = request.FILES['image']
-#         fs = FileSystemStorage()
-#         image_path = fs.save(uploaded_image.name, uploaded_image)
-
-#         # load image
-#         image = cv2.imread(image_path)
-
-#         #detect faces in the image
-#         detected_image = detect_faces(image)
-
-#         #convert the image to png format and encode in base64
-#         _, buffer = cv2.imencode('.png', detected_image)
-#         image_base64 = base64.b64encode(buffer).decode('utf-8')
-
-#         context = {'image': image_base64}
-#         return render(request, "absensi_masuk/result.html", context)
-#     return render(request, "absensi_masuk/face_detection.html")
-
-# import cv2
-# from django.core.files.base import ContentFile
-# from .models import ImageModel  # replace with your actual model
-
-# def capture_and_save_image():
-    # Open video capture device
-    # cap = cv2.VideoCapture(0)
-
-    # # Check if the video capture device was successfully opened
-    # if not cap.isOpened():
-    #     print("Failed to open video capture device")
-    #     return
-
-    # # Read a frame from the video capture device
-    # ret, frame = cap.read()
-
-    # # Check if the frame was successfully read
-    # if not ret:
-    #     print("Failed to read frame from video capture device")
-    #     return
-
-    # # Convert the frame to a JPEG image buffer
-    # success, jpeg_image = cv2.imencode('.jpg', frame)
-    # if not success:
-    #     print("Failed to encode image as JPEG")
-    #     return
-
-    # # Save the JPEG image buffer to the database
-    # image_data = ContentFile(jpeg_image.tobytes())
-    # image_model = ImageModel.objects.create(image=image_data)
-
-    # # Release the video capture device and close the window
-    # cap.release()
-    # cv2.destroyAllWindows()

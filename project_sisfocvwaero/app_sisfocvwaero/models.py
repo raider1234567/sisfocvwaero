@@ -65,13 +65,14 @@ class Karyawan(models.Model):
 class Absensi(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     image_masuk = models.ImageField(upload_to='image_masuk/', null=True, blank=False)
-    image_keluar = models.ImageField(upload_to='image_keluar/', null=True, blank=False, default=False)
+    image_keluar = models.ImageField(upload_to='image_keluar/', null=True, blank=False)
     tanggal = models.DateField(auto_now_add=True)
-    absen_masuk = models.TimeField(auto_now_add=True)
-    ket_masuk = models.CharField(max_length=30)
-    absen_keluar = models.TimeField(auto_now_add=True)
-    ket_keluar = models.CharField(max_length=30)
+    absen_masuk = models.TimeField(null=True)
+    ket_masuk = models.CharField(max_length=30, null=True)
+    absen_keluar = models.TimeField(null=True)
+    ket_keluar = models.CharField(max_length=30, null=True)
     status = models.CharField(max_length=30)
+    jml_jamlembur = models.IntegerField(null=True)
 
     def __str__(self):
         return f"lokasi = {self.location}, kantor {self.location} dan jarak = {self.distance}"
@@ -79,3 +80,8 @@ class Absensi(models.Model):
 class Gambar(models.Model):
     image = models.ImageField(upload_to='captures')
     date = models.DateTimeField(auto_now_add=True)
+
+class Sakit(models.Model):
+    absensi = models.ForeignKey(Absensi, on_delete=models.CASCADE, null=True)
+    keterangan = models.CharField(max_length=100, null=True)
+    foto = models.ImageField(upload_to='sakit/', null=True)

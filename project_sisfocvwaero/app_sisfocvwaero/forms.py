@@ -63,4 +63,12 @@ class AbsensiForm(forms.ModelForm):
     class Meta:
         model = Absensi
         fields = ('status',)
+
+class SakitForm(forms.ModelForm):
+    class Meta:
+        model = Sakit
+        fields = "__all__"
+        widgets = {
+            'keterangan': forms.Textarea(attrs={'class': 'theme-input-style style--three'}),
+        }
         

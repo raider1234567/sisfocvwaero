@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Mar 2023 pada 16.22
+-- Waktu pembuatan: 14 Mar 2023 pada 00.24
 -- Versi server: 10.4.18-MariaDB
 -- Versi PHP: 7.4.16
 
@@ -30,34 +30,26 @@ SET time_zone = "+00:00";
 CREATE TABLE `app_sisfocvwaero_absensi` (
   `id` bigint(20) NOT NULL,
   `tanggal` date NOT NULL,
-  `absen_masuk` time(6) NOT NULL,
-  `ket_masuk` varchar(30) NOT NULL,
-  `absen_keluar` time(6) NOT NULL,
-  `ket_keluar` varchar(30) NOT NULL,
+  `absen_masuk` time(6) DEFAULT NULL,
+  `ket_masuk` varchar(30) DEFAULT NULL,
+  `absen_keluar` time(6) DEFAULT NULL,
+  `ket_keluar` varchar(30) DEFAULT NULL,
   `status` varchar(30) NOT NULL,
   `user_id` bigint(20) DEFAULT NULL,
   `image_keluar` varchar(100) DEFAULT NULL,
-  `image_masuk` varchar(100) DEFAULT NULL
+  `image_masuk` varchar(100) DEFAULT NULL,
+  `jml_jamlembur` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `app_sisfocvwaero_absensi`
 --
 
-INSERT INTO `app_sisfocvwaero_absensi` (`id`, `tanggal`, `absen_masuk`, `ket_masuk`, `absen_keluar`, `ket_keluar`, `status`, `user_id`, `image_keluar`, `image_masuk`) VALUES
-(10, '2023-03-05', '00:12:20.075662', 'TEPAT_WAKTU', '00:12:20.075662', '-', 'HADIR', 17, '', ''),
-(11, '2023-03-05', '00:17:31.764463', 'TEPAT_WAKTU', '00:17:31.764463', '-', 'HADIR', 17, '', ''),
-(12, '2023-03-05', '00:19:04.772186', 'TEPAT_WAKTU', '00:19:04.772186', '-', 'HADIR', 17, '', ''),
-(13, '2023-03-05', '00:21:35.760516', 'TEPAT_WAKTU', '00:21:35.760516', '-', 'HADIR', 17, '', ''),
-(14, '2023-03-05', '00:26:22.177492', 'TEPAT_WAKTU', '00:26:22.177492', '-', 'HADIR', 17, '', ''),
-(15, '2023-03-05', '00:30:01.753944', 'TEPAT_WAKTU', '00:30:01.753944', '-', 'HADIR', 17, '', ''),
-(16, '2023-03-05', '00:31:13.550704', 'TEPAT_WAKTU', '00:31:13.550704', '-', 'HADIR', 17, '', ''),
-(17, '2023-03-05', '00:44:10.967943', 'TEPAT_WAKTU', '00:44:10.967943', '-', 'HADIR', 17, '', ''),
-(18, '2023-03-05', '00:47:06.841783', 'TEPAT_WAKTU', '00:47:06.841783', '-', 'HADIR', 17, '', ''),
-(19, '2023-03-05', '00:47:26.942346', 'TEPAT_WAKTU', '00:47:26.942346', '-', 'HADIR', 17, '', ''),
-(20, '2023-03-05', '00:52:14.640080', 'TEPAT_WAKTU', '00:52:14.640080', '-', 'HADIR', 17, '', ''),
-(21, '2023-03-05', '07:26:00.603631', 'TEPAT_WAKTU', '07:26:00.603631', '-', 'HADIR', 17, '', ''),
-(22, '2023-03-05', '07:42:47.051490', 'TEPAT_WAKTU', '07:42:47.051490', '-', 'HADIR', 17, '', '');
+INSERT INTO `app_sisfocvwaero_absensi` (`id`, `tanggal`, `absen_masuk`, `ket_masuk`, `absen_keluar`, `ket_keluar`, `status`, `user_id`, `image_keluar`, `image_masuk`, `jml_jamlembur`) VALUES
+(29, '2023-03-11', '19:50:20.000000', 'TELAT', '21:58:18.000000', 'LEMBUR', 'HADIR', 17, 'image_keluar/image.jpg', 'image_masuk/image_6T4uIuS.jpg', 4),
+(30, '2023-03-11', '22:06:03.000000', 'TELAT', '22:08:39.000000', 'LEMBUR', 'HADIR', 17, 'image_keluar/image_xZsYoeF.jpg', 'image_masuk/image_J55vT7g.jpg', 5),
+(31, '2023-03-11', '22:18:09.000000', 'TELAT', '22:20:44.000000', 'LEMBUR', 'HADIR', 21, 'image_keluar/image_TR12sEt.jpg', 'image_masuk/image_h8GXWqO.jpg', 5),
+(32, '2023-03-12', '13:43:37.000000', 'TELAT', '13:44:37.000000', 'TEPAT_WAKTU', 'HADIR', 21, 'image_keluar/image_TIOQcVC.jpg', 'image_masuk/image_3fO2gxn.jpg', NULL);
 
 -- --------------------------------------------------------
 
@@ -147,6 +139,19 @@ INSERT INTO `app_sisfocvwaero_karyawan` (`id`, `nip`, `nama`, `jk`, `agama`, `tg
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `app_sisfocvwaero_sakit`
+--
+
+CREATE TABLE `app_sisfocvwaero_sakit` (
+  `id` bigint(20) NOT NULL,
+  `keterangan` varchar(100) DEFAULT NULL,
+  `foto` varchar(100) DEFAULT NULL,
+  `absensi_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `app_sisfocvwaero_user`
 --
 
@@ -174,10 +179,10 @@ CREATE TABLE `app_sisfocvwaero_user` (
 INSERT INTO `app_sisfocvwaero_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `is_admin`, `is_karyawan`, `is_pimpinan`) VALUES
 (1, 'pbkdf2_sha256$390000$TQPdrhZrjH0Yo52hNpsf4Y$OaROE7mVQNkHcMhS87myOrhOasvsxiuALz5A4gT42Ek=', '2023-02-26 07:14:36.065159', 1, 'clara', '', '', 'clarafalisha13@gmail.com', 1, 1, '2023-02-18 06:54:26.688803', 0, 0, 0),
 (14, 'pbkdf2_sha256$390000$Of6i5JqTX4xsiAzH7FrC8e$UtL3UEo1R9Ljiip6RSSxuHwIBUizalltWNAS0x8ZCyU=', NULL, 0, 'clara2', '', '', 'clara@gmail.com', 0, 1, '2023-02-21 13:37:31.606431', 0, 1, 0),
-(17, 'pbkdf2_sha256$390000$5yuCsT7nOnkIw0TZS5nZbt$5E6cKlLqQerrcbYnXE3d/36jPa7BbcPWFEWX7Z9SgwA=', '2023-02-26 08:15:19.478784', 0, 'suardi', '', '', 'suardi@gmail.com', 0, 1, '2023-02-21 16:59:21.654017', 1, 1, 0),
+(17, 'pbkdf2_sha256$390000$5yuCsT7nOnkIw0TZS5nZbt$5E6cKlLqQerrcbYnXE3d/36jPa7BbcPWFEWX7Z9SgwA=', '2023-03-10 17:50:34.634837', 0, 'suardi', '', '', 'suardi@gmail.com', 0, 1, '2023-02-21 16:59:21.654017', 1, 1, 0),
 (19, 'pbkdf2_sha256$390000$rkLqsTp4JHe6PRSr4F40Ct$TnMvQuVOOgaGG81mPDw6qkh8jDfLfFXv7Ro4aHQmsrU=', '2023-02-22 05:18:41.436841', 0, 'carla', '', '', 'carla123@gmail.com', 0, 1, '2023-02-21 17:24:37.311643', 0, 1, 0),
 (20, 'pbkdf2_sha256$390000$UgFTZ71KEH0q6QnSH7mcjW$eDyd2z4bTP9DYQJUjrdZPin939kDebI6TSltINvjnvE=', '2023-02-23 13:50:44.339331', 0, 'carlafs', '', '', 'clarafs235@gmail.com', 0, 1, '2023-02-23 12:52:00.990620', 1, 1, 0),
-(21, 'pbkdf2_sha256$390000$mOcOWOyi50zFspvNYGJtP0$5erQ/u+GVNWRrIxsrh9uy9MViU550zcNOIAFOXscLLA=', NULL, 0, 'sahril', '', '', 'sahril123@gmail.com', 0, 1, '2023-03-01 16:29:49.254684', 0, 1, 0);
+(21, 'pbkdf2_sha256$390000$mOcOWOyi50zFspvNYGJtP0$5erQ/u+GVNWRrIxsrh9uy9MViU550zcNOIAFOXscLLA=', '2023-03-11 14:17:51.403627', 0, 'sahril', '', '', 'sahril123@gmail.com', 0, 1, '2023-03-01 16:29:49.254684', 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -291,7 +296,11 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (45, 'Can add gambar', 11, 'add_gambar'),
 (46, 'Can change gambar', 11, 'change_gambar'),
 (47, 'Can delete gambar', 11, 'delete_gambar'),
-(48, 'Can view gambar', 11, 'view_gambar');
+(48, 'Can view gambar', 11, 'view_gambar'),
+(49, 'Can add sakit', 12, 'add_sakit'),
+(50, 'Can change sakit', 12, 'change_sakit'),
+(51, 'Can delete sakit', 12, 'delete_sakit'),
+(52, 'Can view sakit', 12, 'view_sakit');
 
 -- --------------------------------------------------------
 
@@ -376,6 +385,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (8, 'app_sisfocvwaero', 'divisi'),
 (11, 'app_sisfocvwaero', 'gambar'),
 (9, 'app_sisfocvwaero', 'karyawan'),
+(12, 'app_sisfocvwaero', 'sakit'),
 (7, 'app_sisfocvwaero', 'user'),
 (3, 'auth', 'group'),
 (2, 'auth', 'permission'),
@@ -434,7 +444,12 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (31, 'app_sisfocvwaero', '0013_remove_absensi_distance_remove_absensi_location_and_more', '2023-03-04 08:20:08.999096'),
 (32, 'app_sisfocvwaero', '0014_alter_absensi_image_keluar', '2023-03-05 02:28:23.324092'),
 (33, 'app_sisfocvwaero', '0015_capture', '2023-03-05 02:47:23.579168'),
-(34, 'app_sisfocvwaero', '0016_rename_capture_gambar', '2023-03-08 22:55:11.043512');
+(34, 'app_sisfocvwaero', '0016_rename_capture_gambar', '2023-03-08 22:55:11.043512'),
+(35, 'app_sisfocvwaero', '0017_alter_absensi_image_keluar', '2023-03-10 15:58:43.573204'),
+(36, 'app_sisfocvwaero', '0018_alter_absensi_absen_keluar_alter_absensi_absen_masuk', '2023-03-11 11:02:40.545125'),
+(37, 'app_sisfocvwaero', '0019_absensi_jml_jamlembur', '2023-03-11 11:21:03.717637'),
+(38, 'app_sisfocvwaero', '0020_alter_absensi_absen_keluar_alter_absensi_absen_masuk', '2023-03-11 11:47:04.192018'),
+(39, 'app_sisfocvwaero', '0021_alter_absensi_ket_keluar_alter_absensi_ket_masuk_and_more', '2023-03-12 06:04:03.116489');
 
 -- --------------------------------------------------------
 
@@ -453,7 +468,7 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('mybofgz575upf7g5cxds12ft19f8jv6p', '.eJxVjL0OwiAURt-F2RDo5dfR3Wcg9xaQqoGktJPx3ZWkgw7f8p2T82IB962Evac1LJGdmbTs9HsSzo9UB4l3rLfG51a3dSE-FH7Qzq8tpuflcP8CBXsZ3ZgNgpxy8kJZks4nrTKREtZHBwokTeAFGi-cM-DwOxJaIxlrrQf2_gDvJjbL:1pWCBj:Zk5WZ2ClKOIKyU445K2_wjzVl1gkatu75hx-50pNMfc', '2023-03-12 08:15:19.481793');
+('crsxcaekfvgzzvynw3qcxvh8qwzqnrmp', '.eJxVjDsOwjAQBe_iGln-xR9Kes4QrXc3OIBsKU4qxN0hUgpo38y8lxhhW8u4dV7GmcRZGC1Ov2MGfHDdCd2h3prEVtdlznJX5EG7vDbi5-Vw_w4K9PKtJ9YKnOLJRfYRAmaikBISABrwVjuI5ChZxRhQh5jVkIZJe2t8tgHE-wMvHjiS:1pb02h:xF9gReqtJpx4WxEXtkb-cXKh8M4xGyZQDExiy7lqTh8', '2023-03-25 14:17:51.407973');
 
 --
 -- Indexes for dumped tables
@@ -485,6 +500,13 @@ ALTER TABLE `app_sisfocvwaero_karyawan`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD KEY `app_sisfocvwaero_kar_divisi_id_id_4bfece4d_fk_app_sisfo` (`divisi_id_id`);
+
+--
+-- Indeks untuk tabel `app_sisfocvwaero_sakit`
+--
+ALTER TABLE `app_sisfocvwaero_sakit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `app_sisfocvwaero_sak_absensi_id_6f289be7_fk_app_sisfo` (`absensi_id`);
 
 --
 -- Indeks untuk tabel `app_sisfocvwaero_user`
@@ -590,7 +612,7 @@ ALTER TABLE `django_session`
 -- AUTO_INCREMENT untuk tabel `app_sisfocvwaero_absensi`
 --
 ALTER TABLE `app_sisfocvwaero_absensi`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT untuk tabel `app_sisfocvwaero_divisi`
@@ -609,6 +631,12 @@ ALTER TABLE `app_sisfocvwaero_gambar`
 --
 ALTER TABLE `app_sisfocvwaero_karyawan`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT untuk tabel `app_sisfocvwaero_sakit`
+--
+ALTER TABLE `app_sisfocvwaero_sakit`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `app_sisfocvwaero_user`
@@ -644,7 +672,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT untuk tabel `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT untuk tabel `auth_user`
@@ -674,13 +702,13 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT untuk tabel `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -698,6 +726,12 @@ ALTER TABLE `app_sisfocvwaero_absensi`
 ALTER TABLE `app_sisfocvwaero_karyawan`
   ADD CONSTRAINT `app_sisfocvwaero_kar_divisi_id_id_4bfece4d_fk_app_sisfo` FOREIGN KEY (`divisi_id_id`) REFERENCES `app_sisfocvwaero_divisi` (`id`),
   ADD CONSTRAINT `app_sisfocvwaero_kar_user_id_0355cdf1_fk_app_sisfo` FOREIGN KEY (`user_id`) REFERENCES `app_sisfocvwaero_user` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `app_sisfocvwaero_sakit`
+--
+ALTER TABLE `app_sisfocvwaero_sakit`
+  ADD CONSTRAINT `app_sisfocvwaero_sak_absensi_id_6f289be7_fk_app_sisfo` FOREIGN KEY (`absensi_id`) REFERENCES `app_sisfocvwaero_absensi` (`id`);
 
 --
 -- Ketidakleluasaan untuk tabel `app_sisfocvwaero_user_groups`

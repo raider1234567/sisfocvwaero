@@ -1,0 +1,87 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="row">
+        <div class="col-12">
+            <div class="card mb-30">
+                {% for msg in messages %}
+                <div class="alert alert-primary m-3" role="alert">
+                    {{ msg }}
+                </div>
+                {% endfor %}
+                <div class="card-body text-center">
+                    <h4 class="font-20">Data Absensi</h4>
+                </div>
+                <div class="card-body table-responsive">
+                    <!-- Invoice List Table -->
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>TANGGAL</th>
+                                <th>ABSEN MASUK</th>
+                                <th>KETERANGAN MASUK</th>
+                                <th>ABSEN KELUAR</th>
+                                <th>KETERANGAN KELUAR</th>
+                                <th>STATUS</th>
+                                <th>GAMBAR ABSEN MASUK</th>
+                                <th>GAMBAR ABSEN KELUAR</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>NO</th>
+                                <th>TANGGAL</th>
+                                <th>ABSEN MASUK</th>
+                                <th>KETERANGAN MASUK</th>
+                                <th>ABSEN KELUAR</th>
+                                <th>KETERANGAN KELUAR</th>
+                                <th>STATUS</th>
+                                <th>GAMBAR ABSEN MASUK</th>
+                                <th>GAMBAR ABSEN KELUAR</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for absensis in absensi %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ absensis.tanggal }}</td>
+                                <td>{{ absensis.absen_masuk }}</td>
+                                <td>{{ absensis.ket_masuk }}</td>
+                                <td>{{ absensis.absen_keluar }}</td>
+                                <td>{{ absensis.ket_keluar }}</td>
+                                <td>{{ absensis.status }}</td>
+                                <td>
+                                    {% if absensis.image_masuk.url != null %}
+                                        <img src="{{ absensis.image_masuk.url }}" alt="foto" height="50px" width="50px"><br>
+                                    {% else %}
+                                        <img src="{% static 'img/avatar/avatar-user.png' %}" alt="foto" height="50px" width="50px"><br>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if absensis.image_keluar.url != null %}
+                                        <img src="{{ absensis.image_keluar.url }}" alt="foto" height="50px" width="50px"><br>
+                                    {% else %}
+                                        <img src="{% static 'img/avatar/avatar-user.png' %}" alt="foto" height="50px" width="50px"><br>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="" class="btn btn-warning">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Invoice List Table -->
+                </div>
+            </div>
+        </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}
